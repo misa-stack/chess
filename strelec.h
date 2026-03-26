@@ -1,0 +1,13 @@
+#ifndef STRELEC_H
+#define STRELEC_H
+#include "figurka.h"
+
+class Strelec : public Figurka
+{
+public:
+	Strelec(const int barva );
+	bool validniTah(int fromY, int fromX, int toY, int toX, Sachovnice *s);
+
+};
+
+#endif // STRELEC_H
