@@ -172,12 +172,13 @@ void Sachovnice::robot()
 				Figurka* f = pozice[r][c];
 				for(int y = 0 ; y < 8 ; y++){
 					for(int x =0; x < 8; x++){
+						if(f->barva == barvicka)
 						if (f->validniTah(r, c,y ,x, this))
-						//if (f->validniTahSach(c, r, x, y, this))
+						if (f->validniTahSach(c, r, x, y, this))
 						{
 							Tah validniTah;
-							validniTah.fromX =r;
-							validniTah.fromY =c;
+							validniTah.fromX =c;
+							validniTah.fromY =r;
 							validniTah.toX =x;
 							validniTah.toY=y;
 							validniTah.vyhozena = pozice[r][c];
