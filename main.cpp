@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 		}));
 		bileBody.kresli(1200,450,1670,550);
 		cerneBody.kresli(1200,600,1670,700);
-
+		SDL_Delay(1000);
 		/* konec kresleni */
 		obrazovka->aktualizuj();
 		

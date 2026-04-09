@@ -1,3 +1,4 @@
+
 #include "kralovna.h"
 
 Kralovna::Kralovna(const int barva): Figurka(barva)

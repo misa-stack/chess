@@ -172,8 +172,8 @@ void Sachovnice::robot()
 				Figurka* f = pozice[r][c];
 				for(int y = 0 ; y < 8 ; y++){
 					for(int x =0; x < 8; x++){
-						if (f->validniTah(y, x, r, c, this))
-						if (f->validniTahSach(y, x, r, c, this))
+						if (f->validniTah(r, c,y ,x, this))
+						//if (f->validniTahSach(c, r, x, y, this))
 						{
 							Tah validniTah;
 							validniTah.fromX =r;
@@ -190,20 +190,24 @@ void Sachovnice::robot()
 			}
 		}
 	}
+	if(tahy.size() != 0){
 	int nahoda = rand()%tahy.size();
 	Figurka* f = pozice[tahy[nahoda].fromY][tahy[nahoda].fromX];
 	pozice[tahy[nahoda].toY][tahy[nahoda].toX] = f;
 	pozice[tahy[nahoda].fromY][tahy[nahoda].fromX] = NULL;
+
 	if(!jeSach(barvicka))
 	{
 		f->pohlase(tahy[nahoda].fromY,tahy[nahoda].fromX,tahy[nahoda].toY,tahy[nahoda].toX,this);
 		barvicka = (barvicka == BILAF) ? CERNAF : BILAF;
+		SDL_Delay(1000);
 	}
 	else
 	{
 		tahniZpet();
 		barvicka = (barvicka == BILAF) ? CERNAF : BILAF;
 
+	}
 	}
 }
 void Sachovnice::klik(int kx, int ky)
