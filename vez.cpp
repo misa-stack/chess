@@ -1,4 +1,4 @@
-#include "vez.h"
+#include "Vez.h"
 #include <SDL/SDL.h>
 #include "pesak.h"
 #include "grafika.h"

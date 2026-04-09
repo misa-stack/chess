@@ -2,7 +2,7 @@
 #include "grafika.h"
 #include "sachovnice.h"
 #include "pesak.h"
-#include "vez.h"
+#include "Vez.h"
 #include "kun.h"
 #include "strelec.h"
 #include "kralovna.h"

@@ -1,3 +1,4 @@
+Vez.h
 figurka.cpp
 figurka.h
 grafika.cpp
@@ -18,4 +19,3 @@ sachovnice.h
 strelec.cpp
 strelec.h
 vez.cpp
-vez.h
