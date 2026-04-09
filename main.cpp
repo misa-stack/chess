@@ -1,5 +1,5 @@
 
-
+#include <time.h>
 #include <SDL/SDL.h>
 #include "sachovnice.h"
 #include "grafika.h"
@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 	}));
 	m.pridej(new Tlacitko("reset figurek", [&]() {
 	}));
-
+	srand(time(NULL));
 	while(1)
 	{
 

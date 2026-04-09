@@ -11,6 +11,7 @@ struct Tah {
 	int fromY;
 	int toX;
 	int toY;
+	int hodnota;
 	bool rosada;
 	Figurka* vyhozena;
 };
@@ -46,7 +47,7 @@ public:
 	bool jePolickoOhrozeno(int x , int y, int barvaUtocnika );
 	bool jeSach(int barvaKrale);
 	void robot();
-
+	int hodnotaTahu;
 };
 
 #endif // SACHOVNICE_H

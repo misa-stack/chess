@@ -174,16 +174,48 @@ void Sachovnice::robot()
 					for(int x =0; x < 8; x++){
 						if(f->barva == barvicka)
 						if (f->validniTah(r, c,y ,x, this))
-						if (f->validniTahSach(c, r, x, y, this))
+						if (f->validniTahSach(r, c, y, x, this))
 						{
 							Tah validniTah;
-							validniTah.fromX =c;
-							validniTah.fromY =r;
-							validniTah.toX =x;
-							validniTah.toY=y;
-							validniTah.vyhozena = pozice[r][c];
-							validniTah.rosada = true;
-							tahy.push_back(validniTah);
+							if(pozice[y][x])
+							hodnotaTahu = pozice[y][x]->hodnota;
+
+							if(tahy.empty())
+							{
+								validniTah.fromX =c;
+								validniTah.fromY =r;
+								validniTah.toX =x;
+								validniTah.toY=y;
+								validniTah.vyhozena = pozice[r][c];
+								validniTah.rosada = true;
+								validniTah.hodnota = hodnotaTahu;
+								tahy.push_back(validniTah);
+							}
+							if(hodnotaTahu > tahy[0].hodnota){
+								tahy.clear();
+								validniTah.fromX =c;
+								validniTah.fromY =r;
+								validniTah.toX =x;
+								validniTah.toY=y;
+								validniTah.vyhozena = pozice[r][c];
+								validniTah.rosada = true;
+								validniTah.hodnota = hodnotaTahu;
+								tahy.push_back(validniTah);
+							}
+
+							if(hodnotaTahu == tahy[0].hodnota){
+								validniTah.fromX =c;
+								validniTah.fromY =r;
+								validniTah.toX =x;
+								validniTah.toY=y;
+								validniTah.vyhozena = pozice[r][c];
+								validniTah.rosada = true;
+								validniTah.hodnota = hodnotaTahu;
+								tahy.push_back(validniTah);
+							}
+
+
+
 						}
 
 					}
