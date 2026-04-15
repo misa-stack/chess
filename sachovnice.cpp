@@ -125,123 +125,76 @@ void Sachovnice::kresli()
 	}
 }
 int Sachovnice::bileBody(){
-	//			129- pocetbodu
-	int bilebody = 0;
-	for(int y = 0; y < 8; y++)
-	{
-		for(int x = 0; x < 8; x++)
-		{
-			if(pozice[y][x])
-			{
-				if(pozice[y][x]->barva == BILAF)
-				{
-					bilebody += pozice[y][x]->hodnota;
-				}
-			}
-		}
-
-	}
-	return bilebody;
+    int bilebody = 0;
+    for (int r = 0; r < 8; r++) {
+        for (int c = 0; c < 8; c++) {
+            if (pozice[r][c]) {
+                if (pozice[r][c]->barva == BILAF)
+                    bilebody += pozice[r][c]->hodnota;
+            }
+        }
+    }
+    return bilebody;
 }
 int Sachovnice::cerneBody(){
-	//			129- pocetbodu
-	int cernebody = 0;
-	for(int y =0; y < 8; y++)
-	{
-		for(int x = 0; x < 8; x++)
-		{
-			if(pozice[y][x])
-			{
-				if(pozice[y][x]->barva == CERNAF)
-				{
-					cernebody += pozice[y][x]->hodnota;
 
-				}
-			}
-		}
-
-	}
-	return cernebody;
+        int cernebody = 0;
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                if (pozice[r][c]) {
+                    if (pozice[r][c]->barva == CERNAF)
+                        cernebody += pozice[r][c]->hodnota;
+                }
+            }
+        }
+        return cernebody;
 }
 void Sachovnice::robot()
 {
-	std::vector<Tah> tahy;
-	for(int r = 0; r < 8;r++){
-		for(int c = 0; c<8;c++){
-			if(pozice[r][c]){
-				Figurka* f = pozice[r][c];
-				for(int y = 0 ; y < 8 ; y++){
-					for(int x =0; x < 8; x++){
-						if(f->barva == barvicka)
-						if (f->validniTah(r, c,y ,x, this))
-						if (f->validniTahSach(r, c, y, x, this))
-						{
-							Tah validniTah;
-							if(pozice[y][x])
-							hodnotaTahu = pozice[y][x]->hodnota;
+    std::vector<Tah> nejlepsiTahy;
+    int maxHodnota = -1;
 
-							if(tahy.empty())
-							{
-								validniTah.fromX =c;
-								validniTah.fromY =r;
-								validniTah.toX =x;
-								validniTah.toY=y;
-								validniTah.vyhozena = pozice[r][c];
-								validniTah.rosada = true;
-								validniTah.hodnota = hodnotaTahu;
-								tahy.push_back(validniTah);
-							}
-							if(hodnotaTahu > tahy[0].hodnota){
-								tahy.clear();
-								validniTah.fromX =c;
-								validniTah.fromY =r;
-								validniTah.toX =x;
-								validniTah.toY=y;
-								validniTah.vyhozena = pozice[r][c];
-								validniTah.rosada = true;
-								validniTah.hodnota = hodnotaTahu;
-								tahy.push_back(validniTah);
-							}
+    for (int r = 0; r < 8; r++) {
+        for (int c = 0; c < 8; c++) {
+            if (pozice[r][c] && pozice[r][c]->barva == barvicka) {
+                Figurka* f = pozice[r][c];
+                for (int y = 0; y < 8; y++) {
+                    for (int x = 0; x < 8; x++) {
+                        if (f->validniTah(r, c, y, x, this) && f->validniTahSach(r, c, y, x, this)) {
+                            int hodnota = pozice[y][x] ? pozice[y][x]->hodnota : 0;
 
-							if(hodnotaTahu == tahy[0].hodnota){
-								validniTah.fromX =c;
-								validniTah.fromY =r;
-								validniTah.toX =x;
-								validniTah.toY=y;
-								validniTah.vyhozena = pozice[r][c];
-								validniTah.rosada = true;
-								validniTah.hodnota = hodnotaTahu;
-								tahy.push_back(validniTah);
-							}
+                            if (hodnota > maxHodnota) {
+                                maxHodnota = hodnota;
+                                nejlepsiTahy.clear();
+                            }
 
+                            if (hodnota == maxHodnota) {
+                                Tah t;
+                                t.fromX = c; t.fromY = r;
+                                t.toX = x;   t.toY = y;
+                                t.vyhozena = pozice[y][x];
+                                t.rosada = false;
+                                nejlepsiTahy.push_back(t);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
+    if (!nejlepsiTahy.empty()) {
+        Tah vybrany = nejlepsiTahy[rand() % nejlepsiTahy.size()];
+        Figurka* f = pozice[vybrany.fromY][vybrany.fromX];
 
-						}
+        tahZpet.push_back(vybrany);
+        pozice[vybrany.toY][vybrany.toX] = f;
+        pozice[vybrany.fromY][vybrany.fromX] = NULL;
 
-					}
-				}
-			}
-		}
-	}
-	if(tahy.size() != 0){
-	int nahoda = rand()%tahy.size();
-	Figurka* f = pozice[tahy[nahoda].fromY][tahy[nahoda].fromX];
-	pozice[tahy[nahoda].toY][tahy[nahoda].toX] = f;
-	pozice[tahy[nahoda].fromY][tahy[nahoda].fromX] = NULL;
-
-	if(!jeSach(barvicka))
-	{
-		f->pohlase(tahy[nahoda].fromY,tahy[nahoda].fromX,tahy[nahoda].toY,tahy[nahoda].toX,this);
-		barvicka = (barvicka == BILAF) ? CERNAF : BILAF;
-		SDL_Delay(1000);
-	}
-	else
-	{
-		tahniZpet();
-		barvicka = (barvicka == BILAF) ? CERNAF : BILAF;
-
-	}
-	}
+        f->pohlase(vybrany.fromY, vybrany.fromX, vybrany.toY, vybrany.toX, this);
+        barvicka = (barvicka == BILAF) ? CERNAF : BILAF;
+        vybrano = false;
+    }
 }
 void Sachovnice::klik(int kx, int ky)
 {
