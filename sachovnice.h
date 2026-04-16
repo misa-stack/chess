@@ -19,6 +19,7 @@ class Sachovnice
 {
 public:
 
+    int hodnota;
 	bool hraju;
 	Sachovnice();
 	Figurka* pozice[8][8];
@@ -48,6 +49,7 @@ public:
 	bool jeSach(int barvaKrale);
 	void robot();
 	int hodnotaTahu;
+    int hodnotaSachovnice();
 };
 
 #endif // SACHOVNICE_H

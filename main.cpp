@@ -15,38 +15,38 @@ int main(int argc, char** argv)
 	Menu cerneBody;
 	Menu bileBody;
 	Menu tahujuzpet;
-	char bilebody[20];
-	char cernebody[20];
+    Menu Body;
+    char hodnota[20];
 
 	Sachovnice s;
 	tahujuzpet.pridej(new Tlacitko("tah zpet",[&](){
-
 	}));
+
 	f.pridej(new Tlacitko("fullscreen",[&](){
 
 	}));
+
 	m.pridej(new Tlacitko("reset figurek", [&]() {
 	}));
 	srand(time(NULL));
 	while(1)
 	{
+        sprintf(hodnota,"%d",s.hodnota);
+
+        Body.pridej(new Tlacitko(hodnota,[&](){
+        }));
+
+
 
 		obrazovka->smaz();
 		
 		/* zacatek kresleni */
 		s.robot();
 		s.kresli();
-		tahujuzpet.kresli(1200,750,1670,850);
 		m.kresli(1200,150,1670,250);
 		f.kresli(1200,300,1670,400);
-		sprintf(bilebody,"%d",s.bileBody());
-		sprintf(cernebody,"%d",s.cerneBody());
-		bileBody.pridej(new Tlacitko(bilebody, [&]() {
-		}));
-		cerneBody.pridej(new Tlacitko(cernebody, [&]() {
-		}));
-		bileBody.kresli(1200,450,1670,550);
-		cerneBody.kresli(1200,600,1670,700);
+        tahujuzpet.kresli(1200,450,1670,550);
+        Body.kresli(1200,600,1670,750);
 		SDL_Delay(1000);
 		/* konec kresleni */
 		obrazovka->aktualizuj();
@@ -57,7 +57,7 @@ int main(int argc, char** argv)
 			switch(event.type)
 			{
 			case SDL_MOUSEBUTTONDOWN:
-				if(1199<event.button.x && event.button.x < 1671 && 750 < event.button.y && event.button.y < 850)
+                if(1199<event.button.x && event.button.x < 1671 && 450 < event.button.y && event.button.y < 550)
 				{
 					s.tahniZpet();
 				}

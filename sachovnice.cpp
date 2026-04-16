@@ -35,6 +35,7 @@ Sachovnice::Sachovnice()
 			mozneTah[r][c] = false;
 }
 
+
 bool Sachovnice::jeFigurka(int y, int x)
 {
 	return pozice[y][x] != NULL;
@@ -82,6 +83,7 @@ void Sachovnice::reset()
 
 void Sachovnice::kresli()
 {
+    hodnota = hodnotaSachovnice();
 	if(jeSach(barvicka))
 	{
 		barva(CERVENA);
@@ -124,30 +126,23 @@ void Sachovnice::kresli()
 		ramecek.kresli();
 	}
 }
-int Sachovnice::bileBody(){
-    int bilebody = 0;
-    for (int r = 0; r < 8; r++) {
-        for (int c = 0; c < 8; c++) {
-            if (pozice[r][c]) {
-                if (pozice[r][c]->barva == BILAF)
-                    bilebody += pozice[r][c]->hodnota;
-            }
-        }
-    }
-    return bilebody;
-}
-int Sachovnice::cerneBody(){
 
-        int cernebody = 0;
-        for (int r = 0; r < 8; r++) {
-            for (int c = 0; c < 8; c++) {
-                if (pozice[r][c]) {
-                    if (pozice[r][c]->barva == CERNAF)
-                        cernebody += pozice[r][c]->hodnota;
-                }
+int Sachovnice::hodnotaSachovnice()
+{
+    int hodnota = 0;
+    for(int r = 0; r < 8; r++)
+        for(int c = 0; c < 8;c++)
+        {
+            if(pozice[r][c])
+            {
+                Figurka* f = pozice[r][c];
+                if(f->barva == BILAF)
+                    hodnota += f->hodnota;
+                if(f->barva == CERNAF)
+                    hodnota -= f->hodnota;
             }
         }
-        return cernebody;
+    return hodnota;
 }
 void Sachovnice::robot()
 {
