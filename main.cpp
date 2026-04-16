@@ -1,4 +1,7 @@
 
+#define BILAF 0
+#define CERNAF 1
+
 #include <time.h>
 #include <SDL/SDL.h>
 #include "sachovnice.h"
@@ -32,6 +35,7 @@ int main(int argc, char** argv)
 	while(1)
 	{
         sprintf(hodnota,"%d",s.hodnota);
+	sprintf(hodnota,"%d",s.hodnota);
 
         Body.pridej(new Tlacitko(hodnota,[&](){
         }));
@@ -41,13 +45,14 @@ int main(int argc, char** argv)
 		obrazovka->smaz();
 		
 		/* zacatek kresleni */
-		s.robot();
 		s.kresli();
+		if(s.barvicka == CERNAF){
+		s.robot();
+		}
 		m.kresli(1200,150,1670,250);
 		f.kresli(1200,300,1670,400);
         tahujuzpet.kresli(1200,450,1670,550);
         Body.kresli(1200,600,1670,750);
-		SDL_Delay(1000);
 		/* konec kresleni */
 		obrazovka->aktualizuj();
 		

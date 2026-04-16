@@ -48,6 +48,7 @@ public:
 	bool jePolickoOhrozeno(int x , int y, int barvaUtocnika );
 	bool jeSach(int barvaKrale);
 	void robot();
+	void pohni(int fromY, int fromX, int toY, int toX);
 	int hodnotaTahu;
     int hodnotaSachovnice();
 };
