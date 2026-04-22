@@ -51,6 +51,7 @@ public:
 	void pohni(int fromY, int fromX, int toY, int toX);
 	int hodnotaTahu;
     int hodnotaSachovnice();
+    int negaMax(int hloubka, int barva);
 };
 
 #endif // SACHOVNICE_H
