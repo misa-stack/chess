@@ -10,8 +10,22 @@ Kun::Kun(const int barva): Figurka(barva)
 	{
 		figurka.nacti("kunc.png");
 	}
-	hodnota = 3;
+	hodnota = 30;
 
+}
+double Kun::hodnotaFigurky(int y, int x){
+	double hodnotakone[8][8] =
+	{
+		{-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0},
+		{-4.0, -2.0,  0.0,  0.0,  0.0,  0.0, -2.0, -4.0},
+		{-3.0,  0.0,  1.0,  1.5,  1.5,  1.0,  0.0, -3.0},
+		{-3.0,  0.5,  1.5,  2.0,  2.0,  1.5,  0.5, -3.0},
+		{-3.0,  0.0,  1.5,  2.0,  2.0,  1.5,  0.0, -3.0},
+		{-3.0,  0.5,  1.0,  1.5,  1.5,  1.0,  0.5, -3.0},
+		{-4.0, -2.0,  0.0,  0.5,  0.5,  0.0, -2.0, -4.0},
+		{-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0}
+	};
+	return hodnota + hodnotakone[x][y];
 }
 bool Kun::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice* s)
 {

@@ -10,6 +10,9 @@ void Figurka::pohlase(int fromY, int fromX, int toY, int toX, Sachovnice *s)
 {
 tah++;
 }
+double Figurka::hodnotaFigurky(int y, int x){
+
+}
 bool Figurka::validniTahSach(int fromY, int fromX, int toY, int toX, Sachovnice *s)
 {
 	Tah aktualniTah;

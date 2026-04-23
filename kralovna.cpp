@@ -11,7 +11,25 @@ Kralovna::Kralovna(const int barva): Figurka(barva)
 	{
 		figurka.nacti("kalovnac.png");
 	}
-	hodnota = 9;
+	hodnota = 90;
+
+}
+double Kralovna::hodnotaFigurky(int y, int x){
+
+	double hodnota[8][8] =
+	{
+	    {-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0},
+	    {-1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0},
+	    {-1.0,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -1.0},
+	    {-0.5,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5},
+	    {0.0,   0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5},
+	    {-1.0,  0.5,  0.5,  0.5,  0.5,  0.5,  0.0, -1.0},
+	    {-1.0,  0.0,  0.5,  0.0,  0.0,  0.0,  0.0, -1.0},
+	    {-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0}
+	};
+
+
+			return hodnota[x][y] + this->hodnota;
 
 }
 bool Kralovna::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice *s)

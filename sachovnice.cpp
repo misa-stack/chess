@@ -136,19 +136,21 @@ int Sachovnice::hodnotaSachovnice()
             {
                 Figurka* f = pozice[r][c];
                 if(f->barva == BILAF)
-                    hodnota += f->hodnota;
+		    hodnota += f->hodnotaFigurky(r,c);
                 if(f->barva == CERNAF)
-                    hodnota -= f->hodnota;
+		    hodnota -= f->hodnotaFigurky(r,c);
             }
         }
     return hodnota;
+
+
 }
 int Sachovnice::negaMax(int hloubka, int barva)
 {
     if(hloubka == 0)
     {
-        int score = hodnotaSachovnice();
-        return (barva == BILAF) ? score : -score;
+	int skore = hodnotaSachovnice();
+	return (barva == BILAF) ? skore : -skore;
     }
 
     int maxEval = -99999;
@@ -158,8 +160,7 @@ int Sachovnice::negaMax(int hloubka, int barva)
             if (pozice[r][c] && pozice[r][c]->barva == barva) {
                 for (int y = 0; y < 8; y++) {
                     for (int x = 0; x < 8; x++) {
-                        if (pozice[r][c]->validniTah(r, c, y, x, this) &&
-                            pozice[r][c]->validniTahSach(r, c, y, x, this)) {
+			if (pozice[r][c]->validniTah(r, c, y, x, this) && pozice[r][c]->validniTahSach(r, c, y, x, this)) {
 
                             pohni(r, c, y, x);
                             int eval = -negaMax(hloubka - 1, barvicka);

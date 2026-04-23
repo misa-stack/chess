@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 		/* zacatek kresleni */
 		s.kresli();
 		if(s.barvicka == CERNAF){
-        //s.robot();
+	s.robot();
 		}
 		m.kresli(1200,150,1670,250);
 		f.kresli(1200,300,1670,400);

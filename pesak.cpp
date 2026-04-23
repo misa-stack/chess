@@ -13,10 +13,44 @@ Pesak::Pesak(const int barva): Figurka(barva)
 	{
 		figurka.nacti("pesakcerny.png");
 	}
-	hodnota = 1;
+	hodnota = 10;
 
 }
+double Pesak::hodnotaFigurky(int y, int x)
+{
+	double hodnotapesakaC[8][8] =
+	{
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+		{0.5, 1.0, 1.0, -2.0, -2.0, 1.0, 1.0, 0.5},
+		{0.5, -0.5, -1.0, 0.0, 0.0, -1.0, -0.5, 0.5},
+		{0.0, 0.0, 0.0, 2.0, 2.0, 0.0, 0.0, 0.0},
+		{0.5, 0.5, 1.0, 2.5, 2.5, 1.0, 0.5, 0.5},
+		{1.0, 1.0, 2.0, 3.0, 3.0, 2.0, 1.0, 1.0},
+		{5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0},
+		{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
+	};
+	double hodnotapesakaB[8][8] =
+	{
+	    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+	    {5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0},
+	    {1.0, 1.0, 2.0, 3.0, 3.0, 2.0, 1.0, 1.0},
+	    {0.5, 0.5, 1.0, 2.5, 2.5, 1.0, 0.5, 0.5},
+	    {0.0, 0.0, 0.0, 2.0, 2.0, 0.0, 0.0, 0.0},
+	    {0.5, -0.5, -1.0, 0.0, 0.0, -1.0, -0.5, 0.5},
+	    {0.5, 1.0, 1.0, -2.0, -2.0, 1.0, 1.0, 0.5},
+	    {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
+	};
 
+	if (barva == CERNAF)
+	{
+		return hodnotapesakaC[x][y] + hodnota;
+	}
+	else if(barva == BILAF)
+	{
+		return hodnotapesakaB[x][y] + hodnota;
+
+	}
+}
 bool Pesak::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice* s)
 {
 	int smer = (barva == BILAF) ? -1 : 1;
