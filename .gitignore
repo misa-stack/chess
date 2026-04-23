@@ -1,0 +1,13 @@
+*.o
+*.d
+*.cflags
+*.cxxflags
+*.config
+*.creator
+*.creator.user
+*.files
+*.includes
+*.autosave
+program
+.qtc_clangd/
+.qtcreator/
