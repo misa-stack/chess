@@ -180,7 +180,7 @@ void Sachovnice::robot()
 {
     std::vector<Tah> nejlepsiTahy;
     int maxEval = -99999;
-    int hloubka = 4;
+    int hloubka = 3;
 
     for (int r = 0; r < 8; r++) {
         for (int c = 0; c < 8; c++) {
@@ -226,6 +226,14 @@ void Sachovnice::pohni(int fromY, int fromX, int toY,int  toX){
     aktualniTah.toX = toX;
     aktualniTah.toY = toY;
     aktualniTah.vyhozena = pozice[toY][toX];
+    aktualniTah.promoce = false;
+    Pesak* pesak = dynamic_cast<Pesak*>(f);
+    if (pesak != NULL) {
+        if ((pesak->barva == BILAF && toY == 0) || (pesak->barva == CERNAF && toY == 7)) {
+            aktualniTah.promoce = true;
+            aktualniTah.promoce2 = f;
+        }
+    }
     Kral* kral = dynamic_cast<Kral*>(f);
     aktualniTah.rosada = false;
     if(kral != NULL){
@@ -236,11 +244,22 @@ void Sachovnice::pohni(int fromY, int fromX, int toY,int  toX){
             aktualniTah.rosada = true;
         }
     }
+    if (aktualniTah.promoce) {
+        tahZpet.push_back(aktualniTah);
+        pozice[toY][toX] = new Kralovna(f->barva);
+        pozice[fromY][fromX] = NULL;
+        f->pohlase(fromY,fromX,toY,toX,this);
 
-    tahZpet.push_back(aktualniTah);
-    pozice[toY][toX] = f;
-    pozice[fromY][fromX] = NULL;
-    f->pohlase(fromY,fromX,toY,toX,this);
+    }
+    else{
+        tahZpet.push_back(aktualniTah);
+        pozice[toY][toX] = f;
+        pozice[fromY][fromX] = NULL;
+        f->pohlase(fromY,fromX,toY,toX,this);
+    }
+
+
+
     barvicka = (barvicka == BILAF) ? CERNAF : BILAF;
 }
 void Sachovnice::klik(int kx, int ky)
@@ -347,6 +366,12 @@ void Sachovnice::tahniZpet() {
 
     Tah posledni = tahZpet.back();
     tahZpet.pop_back();
+
+    if (posledni.promoce) {
+        delete pozice[posledni.toY][posledni.toX];
+        int barva = (barvicka == BILAF) ? CERNAF : BILAF;
+        pozice[posledni.fromY][posledni.fromX] = new Pesak(barva);
+    }
 
     pozice[posledni.fromY][posledni.fromX] = pozice[posledni.toY][posledni.toX];
     if (pozice[posledni.fromY][posledni.fromX]) {
