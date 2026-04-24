@@ -17,6 +17,8 @@ struct Tah {
     Figurka* promoce2;
     Figurka* vyhozena;
 };
+
+
 class Sachovnice
 {
 public:
@@ -53,7 +55,8 @@ public:
     void pohni(int fromY, int fromX, int toY, int toX);
     int hodnotaTahu;
     int hodnotaSachovnice();
-    int negaMax(int hloubka, int barva);
+    int negaMax(int hloubka, int alpha, int beta, int barva);
+
 };
 
 #endif // SACHOVNICE_H

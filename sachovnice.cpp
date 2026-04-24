@@ -145,12 +145,12 @@ int Sachovnice::hodnotaSachovnice()
 
 
 }
-int Sachovnice::negaMax(int hloubka, int barva)
+int Sachovnice::negaMax(int hloubka, int alpha, int beta, int barva)
 {
-    if(hloubka == 0)
+    if (hloubka == 0)
     {
-	int skore = hodnotaSachovnice();
-	return (barva == BILAF) ? skore : -skore;
+        int skore = hodnotaSachovnice();
+        return (barva == BILAF) ? skore : -skore;
     }
 
     int maxEval = -99999;
@@ -160,14 +160,24 @@ int Sachovnice::negaMax(int hloubka, int barva)
             if (pozice[r][c] && pozice[r][c]->barva == barva) {
                 for (int y = 0; y < 8; y++) {
                     for (int x = 0; x < 8; x++) {
-			if (pozice[r][c]->validniTah(r, c, y, x, this) && pozice[r][c]->validniTahSach(r, c, y, x, this)) {
+                        if (pozice[r][c]->validniTah(r, c, y, x, this) &&
+                            pozice[r][c]->validniTahSach(r, c, y, x, this)) {
 
                             pohni(r, c, y, x);
-                            int eval = -negaMax(hloubka - 1, barvicka);
+                            int eval = -negaMax(hloubka - 1, -beta, -alpha, barvicka);
                             tahniZpet();
 
                             if (eval > maxEval) {
                                 maxEval = eval;
+                            }
+
+                            if (eval > alpha) {
+                                alpha = eval;
+                            }
+
+
+                            if (alpha >= beta) {
+                                return alpha;
                             }
                         }
                     }
@@ -181,19 +191,21 @@ void Sachovnice::robot()
 {
     std::vector<Tah> nejlepsiTahy;
     int maxEval = -99999;
-    int hloubka = 3;
+    int hloubka = 4;
+
+    int alpha = -100000;
+    int beta = 100000;
 
     for (int r = 0; r < 8; r++) {
         for (int c = 0; c < 8; c++) {
             if (pozice[r][c] && pozice[r][c]->barva == barvicka) {
                 for (int y = 0; y < 8; y++) {
                     for (int x = 0; x < 8; x++) {
-                        if (pozice[r][c]->validniTah(r, c, y, x, this) &&
-                            pozice[r][c]->validniTahSach(r, c, y, x, this)) {
+                        if (pozice[r][c]->validniTah(r, c, y, x, this) && pozice[r][c]->validniTahSach(r, c, y, x, this)) {
 
                             pohni(r, c, y, x);
 
-                            int eval = -negaMax(hloubka - 1, barvicka);
+                            int eval = -negaMax(hloubka - 1, -beta, -alpha, barvicka);
                             tahniZpet();
 
                             if (eval > maxEval) {
@@ -201,6 +213,9 @@ void Sachovnice::robot()
                                 nejlepsiTahy.clear();
                                 Tah t; t.fromX=c; t.fromY=r; t.toX=x; t.toY=y;
                                 nejlepsiTahy.push_back(t);
+
+                                if (eval > alpha) alpha = eval;
+
                             } else if (eval == maxEval) {
                                 Tah t; t.fromX=c; t.fromY=r; t.toX=x; t.toY=y;
                                 nejlepsiTahy.push_back(t);
