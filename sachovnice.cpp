@@ -136,9 +136,9 @@ int Sachovnice::hodnotaSachovnice()
             {
                 Figurka* f = pozice[r][c];
                 if(f->barva == BILAF)
-		    hodnota += f->hodnotaFigurky(r,c);
+                    hodnota += f->hodnotaFigurky(r,c);
                 if(f->barva == CERNAF)
-		    hodnota -= f->hodnotaFigurky(r,c);
+                    hodnota -= f->hodnotaFigurky(r,c);
             }
         }
     return hodnota;
@@ -191,7 +191,7 @@ void Sachovnice::robot()
 {
     std::vector<Tah> nejlepsiTahy;
     int maxEval = -99999;
-    int hloubka = 4;
+    int hloubka = 5;
 
     int alpha = -100000;
     int beta = 100000;
@@ -410,4 +410,41 @@ void Sachovnice::tahniZpet() {
         }
     }
     barvicka = (barvicka == BILAF) ? CERNAF : BILAF;
+}
+void Sachovnice::tahniZpetuser() {
+    if (tahZpet.empty()) return;
+    if (tahZpet.size() < 2) return;
+
+    for(int i = 0; i<2; ++i){
+        Tah posledni = tahZpet.back();
+        tahZpet.pop_back();
+
+        if (posledni.promoce) {
+            delete pozice[posledni.toY][posledni.toX];
+            int barva = (barvicka == BILAF) ? CERNAF : BILAF;
+            pozice[posledni.fromY][posledni.fromX] = new Pesak(barva);
+        }
+
+        pozice[posledni.fromY][posledni.fromX] = pozice[posledni.toY][posledni.toX];
+        if (pozice[posledni.fromY][posledni.fromX]) {
+            pozice[posledni.fromY][posledni.fromX]->tah -= 1;
+        }
+        pozice[posledni.toY][posledni.toX] = posledni.vyhozena;
+
+        if (posledni.rosada) {
+            if (posledni.toX == 6) {
+                Figurka* vez = pozice[posledni.toY][5];
+                pozice[posledni.toY][7] = vez;
+                if (vez) vez->tah -= 1;
+                pozice[posledni.toY][5] = NULL;
+            }
+            if (posledni.toX == 2) {
+                Figurka* vez = pozice[posledni.toY][3];
+                pozice[posledni.toY][0] = vez;
+                if (vez) vez->tah -= 1;
+                pozice[posledni.toY][3] = NULL;
+            }
+        }
+        barvicka = (barvicka == BILAF) ? CERNAF : BILAF;
+    }
 }

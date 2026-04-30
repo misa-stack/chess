@@ -56,6 +56,7 @@ public:
     int hodnotaTahu;
     int hodnotaSachovnice();
     int negaMax(int hloubka, int alpha, int beta, int barva);
+    void tahniZpetuser();
 
 };
 

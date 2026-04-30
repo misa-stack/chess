@@ -64,7 +64,7 @@ int main(int argc, char** argv)
 			case SDL_MOUSEBUTTONDOWN:
                 if(1199<event.button.x && event.button.x < 1671 && 450 < event.button.y && event.button.y < 550)
 				{
-					s.tahniZpet();
+                    s.tahniZpetuser();
 				}
 				if(1199<event.button.x && event.button.x < 1671 && 150 < event.button.y && event.button.y < 250)
 				{
