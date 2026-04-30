@@ -58,6 +58,10 @@ public:
     int negaMax(int hloubka, int alpha, int beta, int barva);
     void tahniZpetuser();
     bool jeMat(int barvaKrale);
+    void prank();
+    void zorbistTable();
+    int table[8][8][12][5];
+
 
 };
 

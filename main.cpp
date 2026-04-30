@@ -18,6 +18,7 @@ int main(int argc, char** argv)
 	Menu cerneBody;
 	Menu bileBody;
 	Menu tahujuzpet;
+
     Menu Body;
     char hodnota[20];
 
@@ -46,8 +47,10 @@ int main(int argc, char** argv)
 		
 		/* zacatek kresleni */
 		s.kresli();
+		//s.prank();
+
 		if(s.barvicka == CERNAF){
-	s.robot();
+		s.robot();
 		}
 		m.kresli(1200,150,1670,250);
 		f.kresli(1200,300,1670,400);
