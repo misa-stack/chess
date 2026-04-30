@@ -34,7 +34,25 @@ Sachovnice::Sachovnice()
             mozneTah[r][c] = false;
 }
 
+bool Sachovnice::jeMat(int barvaKrale) {
+    if (!jeSach(barvaKrale)) return false;
 
+    for (int r = 0; r < 8; r++) {
+        for (int c = 0; c < 8; c++) {
+            if (pozice[r][c] && pozice[r][c]->barva == barvaKrale) {
+                for (int y = 0; y < 8; y++) {
+                    for (int x = 0; x < 8; x++) {
+                        if (pozice[r][c]->validniTah(r, c, y, x, this) &&
+                            pozice[r][c]->validniTahSach(r, c, y, x, this)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return true; // In check and no escape — checkmate
+}
 bool Sachovnice::jeFigurka(int y, int x)
 {
     return pozice[y][x] != NULL;
@@ -141,6 +159,8 @@ int Sachovnice::hodnotaSachovnice()
                     hodnota -= f->hodnotaFigurky(r,c);
             }
         }
+    if (jeMat(BILAF))  hodnota -= 99999;
+    if (jeMat(CERNAF)) hodnota += 99999;
     return hodnota;
 
 

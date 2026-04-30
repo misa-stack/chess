@@ -57,6 +57,7 @@ public:
     int hodnotaSachovnice();
     int negaMax(int hloubka, int alpha, int beta, int barva);
     void tahniZpetuser();
+    bool jeMat(int barvaKrale);
 
 };
 
