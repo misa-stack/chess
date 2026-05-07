@@ -17,6 +17,10 @@ struct Tah {
     Figurka* promoce2;
     Figurka* vyhozena;
 };
+struct Hashtable {
+	int tahHash;
+	int hodnota;
+};
 
 
 class Sachovnice
@@ -60,11 +64,11 @@ public:
     bool jeMat(int barvaKrale);
     void prank();
     void initZorbistTable();
-    Uint64 table[8][8][12][5];
-    std::list<int> tablemisto;
-    std::list<int> tablehodnota;
+    Uint64 table[8][8][12];
+    std::list<Hashtable> tablemisto;
+    void genHashForWholeTable();
     Uint64 cislogenerator();
-    
+    Uint64 hash;
     
 
 };

@@ -42,10 +42,7 @@ void Sachovnice::initZorbistTable()
 	for(int r = 0;r<8;r++)
 		for(int c = 0;c<8;c++)
 			for(int p = 0;p<12;p++)
-				for(int ros = 0;ros<5;ros++)
-				{
-					table[r][c][p][ros] = cislogenerator();
-				}
+					table[r][c][p] = cislogenerator();
 }
 
 bool Sachovnice::jeMat(int barvaKrale) {
@@ -138,7 +135,18 @@ void Sachovnice::reset()
 		for (int c = 0; c < 8; c++)
 			mozneTah[r][c] = false;
 }
-
+void Sachovnice::genHashForWholeTable()
+{
+	for(int r = 0;r<8;r++)
+		for(int c = 0;c<8;c++)
+		{
+			if(pozice[r][c] != NULL)
+			{
+				int whoami = pozice[r][c]->kdoJsi();
+				hash = hash^table[r][c][whoami];
+			}
+		}
+}
 void Sachovnice::kresli()
 {
 	hodnota = hodnotaSachovnice();
@@ -224,7 +232,6 @@ int Sachovnice::negaMax(int hloubka, int alpha, int beta, int barva)
 					for (int x = 0; x < 8; x++) {
 						if (pozice[r][c]->validniTah(r, c, y, x, this) &&
 								pozice[r][c]->validniTahSach(r, c, y, x, this)) {
-
 
 							pohni(r, c, y, x);
 							int eval = -negaMax(hloubka - 1, -beta, -alpha, barvicka);
