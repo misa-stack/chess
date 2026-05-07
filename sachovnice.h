@@ -59,9 +59,13 @@ public:
     void tahniZpetuser();
     bool jeMat(int barvaKrale);
     void prank();
-    void zorbistTable();
-    int table[8][8][12][5];
-
+    void initZorbistTable();
+    Uint64 table[8][8][12][5];
+    std::list<int> tablemisto;
+    std::list<int> tablehodnota;
+    Uint64 cislogenerator();
+    
+    
 
 };
 

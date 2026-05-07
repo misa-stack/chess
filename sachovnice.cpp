@@ -33,14 +33,18 @@ Sachovnice::Sachovnice()
 		for (int c = 0; c < 8; c++)
 			mozneTah[r][c] = false;
 }
-void Sachovnice::zorbistTable()
+Uint64 Sachovnice::cislogenerator()
+{
+	return ((Uint64)rand())^((Uint64)rand()<<10)^((Uint64)rand()<<33);
+}
+void Sachovnice::initZorbistTable()
 {
 	for(int r = 0;r<8;r++)
 		for(int c = 0;c<8;c++)
 			for(int p = 0;p<12;p++)
 				for(int ros = 0;ros<5;ros++)
 				{
-					int table[r][c][p][ros] = rand();
+					table[r][c][p][ros] = cislogenerator();
 				}
 }
 
@@ -204,6 +208,7 @@ int Sachovnice::hodnotaSachovnice()
 }
 int Sachovnice::negaMax(int hloubka, int alpha, int beta, int barva)
 {
+	
 	if (hloubka == 0)
 	{
 		int skore = hodnotaSachovnice();
@@ -219,6 +224,7 @@ int Sachovnice::negaMax(int hloubka, int alpha, int beta, int barva)
 					for (int x = 0; x < 8; x++) {
 						if (pozice[r][c]->validniTah(r, c, y, x, this) &&
 								pozice[r][c]->validniTahSach(r, c, y, x, this)) {
+
 
 							pohni(r, c, y, x);
 							int eval = -negaMax(hloubka - 1, -beta, -alpha, barvicka);
