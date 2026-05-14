@@ -28,7 +28,7 @@ Sachovnice::Sachovnice()
 	//ramecek.nacti("Sach_Alert.png");
 	ramecekx = -1;
 	rameceky = -1;
-	int table[8][8][12][5];
+    int table[8][8][12];
 	for (int r = 0; r < 8; r++)
 		for (int c = 0; c < 8; c++)
 			mozneTah[r][c] = false;
@@ -43,6 +43,8 @@ void Sachovnice::initZorbistTable()
 		for(int c = 0;c<8;c++)
 			for(int p = 0;p<12;p++)
 					table[r][c][p] = cislogenerator();
+
+    blackToMove = cislogenerator();
 }
 
 bool Sachovnice::jeMat(int barvaKrale) {
@@ -103,6 +105,7 @@ void Sachovnice::prank()
 
 void Sachovnice::reset()
 {
+    genHashForWholeTable();
 	for (int r = 0; r < 8; r++)
 	{
 		for (int c = 0; c < 8; c++)
@@ -146,6 +149,7 @@ void Sachovnice::genHashForWholeTable()
 				hash = hash^table[r][c][whoami];
 			}
 		}
+    if(barvicka == CERNAF) hash ^= blackToMove;
 }
 void Sachovnice::kresli()
 {
@@ -303,8 +307,14 @@ void Sachovnice::robot()
 	}
 }
 void Sachovnice::pohni(int fromY, int fromX, int toY,int  toX){
+
 	Figurka* f = pozice[fromY][fromX];
-	Tah aktualniTah;
+    int whoami = f->kdoJsi();
+    hash ^= table[fromY][fromX][whoami];
+    if (pozice[toY][toX] != NULL) {
+        hash ^= table[toY][toX][pozice[toY][toX]->kdoJsi()];
+    }
+    Tah aktualniTah;
 	int dy = abs(fromY -toY);
 	int dx = abs(fromX -toX);
 	aktualniTah.fromX = fromX;
@@ -344,6 +354,9 @@ void Sachovnice::pohni(int fromY, int fromX, int toY,int  toX){
 		f->pohlase(fromY,fromX,toY,toX,this);
 	}
 
+    int f2 = pozice[toY][toX]->kdoJsi();
+    hash ^= table[toY][toX][f2];
+    hash ^= blackToMove;
 
 
 	barvicka = (barvicka == BILAF) ? CERNAF : BILAF;
@@ -448,11 +461,17 @@ bool Sachovnice::jePolickoOhrozeno(int x, int y, int barvaUtocnika){
 	return false;
 }
 void Sachovnice::tahniZpet() {
+
+
+
 	if (tahZpet.empty()) return;
 
 	Tah posledni = tahZpet.back();
 	tahZpet.pop_back();
 
+    Figurka* f = pozice[posledni.toY][posledni.toX];
+    hash ^= blackToMove;
+    hash ^= table[posledni.toY][posledni.toX][f->kdoJsi()];
 	if (posledni.promoce) {
 		delete pozice[posledni.toY][posledni.toX];
 		int barva = (barvicka == BILAF) ? CERNAF : BILAF;
@@ -479,7 +498,13 @@ void Sachovnice::tahniZpet() {
 			pozice[posledni.toY][3] = NULL;
 		}
 	}
-	barvicka = (barvicka == BILAF) ? CERNAF : BILAF;
+    int f2 = posledni.promoce ? (f->barva == BILAF ? 0 : 6) : f->kdoJsi();
+    hash ^= table[posledni.fromY][posledni.fromX][f2];
+
+    if (posledni.vyhozena) {
+        hash ^= table[posledni.toY][posledni.toX][posledni.vyhozena->kdoJsi()];
+    }
+    barvicka = (barvicka == BILAF) ? CERNAF : BILAF;
 }
 void Sachovnice::tahniZpetuser() {
 	if (tahZpet.empty()) return;

@@ -65,10 +65,11 @@ public:
     void prank();
     void initZorbistTable();
     Uint64 table[8][8][12];
-    std::list<Hashtable> tablemisto;
     void genHashForWholeTable();
     Uint64 cislogenerator();
     Uint64 hash;
+    Uint64 blackToMove;
+
     
 
 };
