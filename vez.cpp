@@ -20,6 +20,13 @@ Vez::Vez(const int barva): Figurka (barva)
 
 
 }
+int Vez::kdoJsi()
+{
+	if(barva == CERNAF)
+		return 7;
+	if(barva == BILAF)
+		return 1;
+}
 double Vez::hodnotaFigurky(int y, int x){
 	double hodnotaC[8][8] =
 	{

@@ -22,6 +22,7 @@ double hodnota;
 	virtual bool validniTah(int fromY, int fromX, int toY, int toX, Sachovnice* s);
 	virtual bool validniTahSach(int fromY, int fromX, int toY, int toX, Sachovnice* s);
 	virtual double hodnotaFigurky(int y, int x);
+	virtual int kdoJsi() = 0;
 
 };
 

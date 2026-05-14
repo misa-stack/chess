@@ -14,6 +14,12 @@ Kralovna::Kralovna(const int barva): Figurka(barva)
 	hodnota = 90;
 
 }
+int Kralovna::kdoJsi(){
+	if(barva == CERNAF)
+		return 10;
+	if(barva == BILAF)
+		return 4;
+}
 double Kralovna::hodnotaFigurky(int y, int x){
 
 	double hodnota[8][8] =

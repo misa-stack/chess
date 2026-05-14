@@ -13,7 +13,12 @@ Kral::Kral(const int barva): Figurka(barva)
 
 	hodnota = 900;
 }
-
+int Kral::kdoJsi(){
+	if(barva == CERNAF)
+		return 11;
+	if(barva == BILAF)
+		return 5;
+}
 double Kral::hodnotaFigurky(int y, int x)
 {
 

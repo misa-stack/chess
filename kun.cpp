@@ -13,6 +13,12 @@ Kun::Kun(const int barva): Figurka(barva)
 	hodnota = 30;
 
 }
+int Kun::kdoJsi(){
+	if(barva == CERNAF)
+		return 8;
+	if(barva == BILAF)
+		return 2;
+}
 double Kun::hodnotaFigurky(int y, int x){
 	double hodnotakone[8][8] =
 	{

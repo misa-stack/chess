@@ -14,6 +14,12 @@ Strelec::Strelec(const int barva): Figurka(barva)
 	hodnota = 30;
 
 }
+int Strelec::kdoJsi(){
+	if(barva == CERNAF)
+		return 9;
+	if(barva == BILAF)
+		return 3;
+}
 double Strelec::hodnotaFigurky(int y, int x){
 	double hodnotaC[8][8] =
 	{

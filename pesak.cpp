@@ -16,6 +16,13 @@ Pesak::Pesak(const int barva): Figurka(barva)
 	hodnota = 10;
 
 }
+int Pesak::kdoJsi()
+{
+	if(barva == CERNAF)
+		return 6;
+	if(barva == BILAF)
+		return 0;
+}
 double Pesak::hodnotaFigurky(int y, int x)
 {
 	double hodnotapesakaC[8][8] =

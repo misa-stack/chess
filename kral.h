@@ -10,7 +10,7 @@ public:
 	bool validniTah(int fromY, int fromX, int toY, int toX, Sachovnice *s);
 	void pohlase(int fromY, int fromX,int toY,int toX, Sachovnice *s);
 	double hodnotaFigurky(int y, int x);
-
+	int kdoJsi();
 };
 
 #endif // KRAL_H
