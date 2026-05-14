@@ -18,7 +18,8 @@ struct Tah {
     Figurka* vyhozena;
 };
 struct Hashtable {
-	int tahHash;
+	int hloubka;
+	Uint64 tahHash;
 	int hodnota;
 };
 
@@ -48,6 +49,7 @@ public:
     int bileBody();
     Obrazek ramecek;
     Obrazek Sach_Alert;
+    Obrazek Sach_Mat_Alert;
     int ramecekx;
     int rameceky;
     bool mozneTah[8][8];
@@ -67,7 +69,8 @@ public:
     Uint64 table[8][8][12];
     void genHashForWholeTable();
     Uint64 cislogenerator();
-    Uint64 hash;
+    Uint64 hash = 0;
+    Hashtable *pole;
     Uint64 blackToMove;
 
     

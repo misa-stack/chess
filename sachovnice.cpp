@@ -23,12 +23,19 @@ Sachovnice::Sachovnice()
 			pozice[r][c] = NULL;
 
 	reset();
+	pole = new Hashtable[1 << 25];
+	if(!pole)
+	{
+		printf("error");
+	}
+	memset (pole, 0, 1 <<25 * sizeof(Hashtable));
 
 	ramecek.nacti("ramecek.png");
-	//ramecek.nacti("Sach_Alert.png");
+	Sach_Alert.nacti("sach.png");
+	Sach_Mat_Alert.nacti("sachmat.png");
 	ramecekx = -1;
 	rameceky = -1;
-    int table[8][8][12];
+   //int table[8][8][12];
 	for (int r = 0; r < 8; r++)
 		for (int c = 0; c < 8; c++)
 			mozneTah[r][c] = false;
@@ -154,11 +161,19 @@ void Sachovnice::genHashForWholeTable()
 void Sachovnice::kresli()
 {
 	hodnota = hodnotaSachovnice();
-	if(jeSach(barvicka))
+	if(jeMat(barvicka))
 	{
-		barva(CERVENA);
-		obdelnik(1,1,100,100);
+		Sach_Mat_Alert.umisti(300,1);
+		Sach_Mat_Alert.kresli();
 	}
+	else if(jeSach(barvicka))
+	{
+		Sach_Alert.umisti(400,1);
+		Sach_Alert.kresli();
+		//barva(CERVENA);
+		//obdelnik(1,1,100,100);
+	}
+
 	barva(101, 67, 33);
 	obdelnik(80, 80, 920, 920);
 
@@ -228,7 +243,7 @@ int Sachovnice::negaMax(int hloubka, int alpha, int beta, int barva)
 	}
 
 	int maxEval = -99999;
-
+	int eval;
 	for (int r = 0; r < 8; r++) {
 		for (int c = 0; c < 8; c++) {
 			if (pozice[r][c] && pozice[r][c]->barva == barva) {
@@ -236,9 +251,21 @@ int Sachovnice::negaMax(int hloubka, int alpha, int beta, int barva)
 					for (int x = 0; x < 8; x++) {
 						if (pozice[r][c]->validniTah(r, c, y, x, this) &&
 								pozice[r][c]->validniTahSach(r, c, y, x, this)) {
-
 							pohni(r, c, y, x);
-							int eval = -negaMax(hloubka - 1, -beta, -alpha, barvicka);
+
+							if(pole[hash % 2000000].tahHash == hash && pole[hash % 2000000].hloubka == hloubka)
+							{
+								eval = pole[2000000% hash].hodnota;
+							}
+
+							else
+							{
+							pole[hash % 2000000].tahHash = hash;
+							pole[hash % 2000000].hloubka = hloubka;
+							pole[hash % 2000000].hodnota = -negaMax(hloubka - 1, -beta, -alpha, barvicka);
+							int eval = pole[hash % 2000000].hodnota;
+}
+
 							tahniZpet();
 
 							if (eval > maxEval) {
@@ -277,9 +304,8 @@ void Sachovnice::robot()
 					for (int x = 0; x < 8; x++) {
 						if (pozice[r][c]->validniTah(r, c, y, x, this) && pozice[r][c]->validniTahSach(r, c, y, x, this)) {
 
-							pohni(r, c, y, x);
 
-							int eval = -negaMax(hloubka - 1, -beta, -alpha, barvicka);
+							int eval = -negaMax(hloubka, -beta, -alpha, barvicka);
 							tahniZpet();
 
 							if (eval > maxEval) {
