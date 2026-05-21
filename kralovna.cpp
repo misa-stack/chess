@@ -35,7 +35,7 @@ double Kralovna::hodnotaFigurky(int y, int x){
 	};
 
 
-			return hodnota[x][y] + this->hodnota;
+			return hodnota[y][x] + this->hodnota;
 
 }
 bool Kralovna::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice *s)

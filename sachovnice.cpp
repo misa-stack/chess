@@ -239,7 +239,7 @@ int Sachovnice::hodnotaSachovnice()
 
 int Sachovnice::negaMax(int hloubka, int alpha, int beta, int barva)
 {
-    int tableIndex = hash % 33554432;
+    int tableIndex = hash % 2000000;
     if (pole[tableIndex].tahHash == hash && pole[tableIndex].hloubka >= hloubka)
     {
         return pole[tableIndex].hodnota;
@@ -293,6 +293,7 @@ int Sachovnice::negaMax(int hloubka, int alpha, int beta, int barva)
 void Sachovnice::robot()
 {
     std::vector<Tah> nejlepsiTahy;
+    bool maxiamazing;
     int maxEval = -99999;
     int hloubka = 5;
 
@@ -400,10 +401,12 @@ void Sachovnice::tahniZpet() {
     hash ^= table[posledni.toY][posledni.toX][f->kdoJsi()];
 
     if (posledni.promoce) {
-        delete pozice[posledni.toY][posledni.toX];
-        int pBarva = (barvicka == BILAF) ? BILAF : CERNAF;
-        pozice[posledni.fromY][posledni.fromX] = new Pesak(pBarva);
-    } else {
+	    int puvod = pozice[posledni.toY][posledni.toX]->barva;
+
+		delete pozice[posledni.toY][posledni.toX];
+		pozice[posledni.fromY][posledni.fromX] = new Pesak(puvod);
+    }
+    else {
         pozice[posledni.fromY][posledni.fromX] = f;
     }
 
@@ -505,9 +508,9 @@ bool Sachovnice::jeSach(int barvaKrale){
             {
                 Kral* kral = dynamic_cast<Kral*>(pozice[r][c]);
                 if(kral && kral->barva == barvaKrale){
-                    kx = c;
-                    ky = r;
-                    goto ven;
+			kx = c;
+			ky = r;
+			goto ven;
                 }
             }
         }

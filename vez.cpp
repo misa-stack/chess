@@ -54,11 +54,11 @@ double Vez::hodnotaFigurky(int y, int x){
 
 		if (barva == CERNAF)
 		{
-			return hodnotaC[x][y] + hodnota;
+			return hodnotaC[y][x] + hodnota;
 		}
 		else if(barva == BILAF)
 		{
-			return hodnotaB[x][y] + hodnota;
+			return hodnotaB[y][x] + hodnota;
 
 		}
 	}

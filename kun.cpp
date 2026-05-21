@@ -31,7 +31,7 @@ double Kun::hodnotaFigurky(int y, int x){
 		{-4.0, -2.0,  0.0,  0.5,  0.5,  0.0, -2.0, -4.0},
 		{-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0}
 	};
-	return hodnota + hodnotakone[x][y];
+	return hodnota + hodnotakone[y][x];
 }
 bool Kun::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice* s)
 {

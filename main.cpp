@@ -7,9 +7,10 @@
 #include "sachovnice.h"
 #include "grafika.h"
 #include "menu.h"
+#include <pthread.h>
 
 int main(int argc, char** argv)
-{
+{	
 	bool fullscreen = false;
 	Obrazovka* obrazovka = Obrazovka::instance();
 	obrazovka->inicializuj(1920, 1080, 0, fullscreen ? SDL_FULLSCREEN : 0);
@@ -18,6 +19,7 @@ int main(int argc, char** argv)
 	Menu cerneBody;
 	Menu bileBody;
 	Menu tahujuzpet;
+	pthread_t threads[2];
 
     Menu Body;
     char hodnota[20];
@@ -39,7 +41,9 @@ int main(int argc, char** argv)
 	sprintf(hodnota,"%d",s.hodnota);
 
         Body.pridej(new Tlacitko(hodnota,[&](){
-        }));
+	}));
+
+
 
 
 
@@ -47,15 +51,17 @@ int main(int argc, char** argv)
 		
 		/* zacatek kresleni */
 		s.kresli();
+
 		//s.prank();
 
 		if(s.barvicka == CERNAF){
 		s.robot();
+
 		}
 		m.kresli(1200,150,1670,250);
 		f.kresli(1200,300,1670,400);
-        tahujuzpet.kresli(1200,450,1670,550);
-        Body.kresli(1200,600,1670,750);
+		tahujuzpet.kresli(1200,450,1670,550);
+		Body.kresli(1200,600,1670,750);
 		/* konec kresleni */
 		obrazovka->aktualizuj();
 		

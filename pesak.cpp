@@ -50,11 +50,11 @@ double Pesak::hodnotaFigurky(int y, int x)
 
 	if (barva == CERNAF)
 	{
-		return hodnotapesakaC[x][y] + hodnota;
+		return hodnotapesakaC[y][x] + hodnota;
 	}
 	else if(barva == BILAF)
 	{
-		return hodnotapesakaB[x][y] + hodnota;
+		return hodnotapesakaB[y][x] + hodnota;
 
 	}
 }
