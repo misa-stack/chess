@@ -2,12 +2,16 @@
 #define BILAF 0
 #define CERNAF 1
 
+#include <stdio.h>
+#include <math.h>
+#include <pthread.h>
 #include <time.h>
 #include <SDL/SDL.h>
 #include "sachovnice.h"
 #include "grafika.h"
 #include "menu.h"
 #include <pthread.h>
+
 
 int main(int argc, char** argv)
 {	
@@ -19,7 +23,8 @@ int main(int argc, char** argv)
 	Menu cerneBody;
 	Menu bileBody;
 	Menu tahujuzpet;
-	pthread_t threads[2];
+
+
 
     Menu Body;
     char hodnota[20];
@@ -34,14 +39,15 @@ int main(int argc, char** argv)
 
 	m.pridej(new Tlacitko("reset figurek", [&]() {
 	}));
+
+	Body.pridej(new Tlacitko(hodnota,[&](){
+	}));
 	srand(time(NULL));
 	while(1)
 	{
         sprintf(hodnota,"%d",s.hodnota);
 	sprintf(hodnota,"%d",s.hodnota);
 
-        Body.pridej(new Tlacitko(hodnota,[&](){
-	}));
 
 
 
@@ -54,9 +60,9 @@ int main(int argc, char** argv)
 
 		//s.prank();
 
-		if(s.barvicka == CERNAF){
+		if(s.barvicka == CERNAF)
+		{
 		s.robot();
-
 		}
 		m.kresli(1200,150,1670,250);
 		f.kresli(1200,300,1670,400);

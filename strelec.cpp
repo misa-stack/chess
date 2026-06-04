@@ -69,6 +69,8 @@ bool Strelec::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice *s)
 	int x = fromX + smerX;
 	int y = fromY + smerY;
 
+	if (abs(fromX - toX) - abs(fromY - toY) != 0) return false;
+
 	while (x != toX || y != toY)
 	{
 		if (s->jeFigurka(y, x)) return false;
@@ -77,8 +79,6 @@ bool Strelec::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice *s)
 	}
 	if (!s->jeFigurka(toY, toX)) return true;
 	if (s->jeNepritel(toY, toX, barva)) return true;
-	if (!s->jeNepritel(toY, toX, barva)) return false;
-
 	return false;
 }
 

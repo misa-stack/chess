@@ -47,6 +47,7 @@ Menu::Menu()
 void Menu::pridej(Tlacitko* t){
 	tlacitka.push_back(t);
 }
+/*
 void Tlacitko::klik(){
 	funkce;
 }
@@ -65,6 +66,7 @@ void Menu::klik(int kx, int ky){
 	}
 
 }
+*/
 void Menu::kresli(int xk, int yk,int xk2, int yk2){
 	int x = 100;
 	int y = 0;

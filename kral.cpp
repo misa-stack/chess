@@ -1,3 +1,4 @@
+
 #include "kral.h"
 
 Kral::Kral(const int barva): Figurka(barva)

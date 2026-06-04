@@ -66,7 +66,7 @@ bool Sachovnice::jeMat(int barvaKrale) {
                 for (int y = 0; y < 8; y++) {
                     for (int x = 0; x < 8; x++) {
                         if (pozice[r][c]->validniTah(r, c, y, x, this) &&
-                            pozice[r][c]->validniTahSach(r, c, y, x, this)) {
+			    pozice[r][c]->validniTahSach(r, c, y, x, this) && jeSach(barvaKrale)) {
                             return false;
                         }
                     }
@@ -136,6 +136,12 @@ void Sachovnice::reset()
                 else if (c == 4) pozice[r][c] = new Kral(barvafigurky);
             }
         }
+    }
+    for(int i= 0; i < tahZpet.size(); i++)
+    {
+	    Tah t = tahZpet.back();
+	    if(t.vyhozena) delete t.vyhozena;
+	    tahZpet.pop_back();
     }
 
     vybrano = false;
@@ -232,14 +238,15 @@ int Sachovnice::hodnotaSachovnice()
             }
         }
     }
-    if (jeMat(BILAF))  hodnota += 99999;
-    if (jeMat(CERNAF)) hodnota -= 99999;
+    if (jeMat(BILAF))  hodnota -= 99999;
+    if (jeMat(CERNAF)) hodnota += 99999;
+
     return hodnota;
 }
 
 int Sachovnice::negaMax(int hloubka, int alpha, int beta, int barva)
 {
-    int tableIndex = hash % 2000000;
+    int tableIndex = hash & ((1 << 25) - 1);
     if (pole[tableIndex].tahHash == hash && pole[tableIndex].hloubka >= hloubka)
     {
         return pole[tableIndex].hodnota;
