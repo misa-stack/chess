@@ -20,8 +20,7 @@ static const int TRANSPOZICNI_MASKA = TRANSPOZICNI_VELIKOST - 1;
 HodnotyFigurek HodnotyFigurek::vychozi()
 {
     HodnotyFigurek h;
-    // Tenths of a pawn.  Knights prefer middlegame; bishops/rooks/queens/pawns
-    // gain in the endgame.  King stays huge so it is never "traded" in MVV-LVA.
+
     h.pesakMG = 10.0;   h.pesakEG = 13.0;
     h.kunMG = 32.0;     h.kunEG = 28.0;
     h.strelecMG = 33.0; h.strelecEG = 35.0;
@@ -94,7 +93,6 @@ Sachovnice::Sachovnice()
     initZorbistTable();
     reset();
 
-    // A compact table leaves room for the GUI and is large enough to be useful.
     pole = new Hashtable[TRANSPOZICNI_VELIKOST];
     if(!pole)
     {
@@ -144,7 +142,6 @@ Figurka* Sachovnice::kopieFigurky(const Figurka* f, bool nactiGrafiku) const
 
 void Sachovnice::synchronizujHodnotyFigurek()
 {
-    // Keep per-piece `hodnota` in sync with the tunable MG table (MVV-LVA, PST base).
     for (int r = 0; r < 8; ++r)
         for (int c = 0; c < 8; ++c) {
             Figurka* f = pozice[r][c];
@@ -409,7 +406,6 @@ bool Sachovnice::jeRemizaFifty() const
 
 bool Sachovnice::jeRemizaOpakovanim() const
 {
-    // Threefold: current hash (last in historieHash) appears at least 3 times.
     if (historieHash.empty()) return false;
     Uint64 aktualni = historieHash.back();
     int pocet = 0;
@@ -425,7 +421,6 @@ bool Sachovnice::jeRemiza() const
 
 double Sachovnice::fazeHry() const
 {
-    // Non-pawn material phase: 1 = middlegame/opening, 0 = pure endgame.
     int material = 0;
     for (int r = 0; r < 8; ++r)
         for (int c = 0; c < 8; ++c) {
@@ -457,7 +452,6 @@ double Sachovnice::hodnoceniPesaku(double faze) const
             const int znamenko = (barva == BILAF) ? 1 : -1;
             const int smer = (barva == BILAF) ? -1 : 1;
 
-            // Connected / side-by-side pawns.
             bool vedle = false;
             for (int dc = -1; dc <= 1; dc += 2) {
                 int nx = c + dc;
@@ -467,7 +461,6 @@ double Sachovnice::hodnoceniPesaku(double faze) const
             }
             if (vedle) skore += znamenko * (0.15 + 0.15 * endgame);
 
-            // Protected by a friendly pawn diagonally behind.
             bool kryty = false;
             int zr = r - smer;
             if (zr >= 0 && zr < 8) {
@@ -480,7 +473,6 @@ double Sachovnice::hodnoceniPesaku(double faze) const
             }
             if (kryty) skore += znamenko * (0.12 + 0.18 * endgame);
 
-            // Pawn ahead of a friendly pawn on the same or adjacent file.
             bool pred = false;
             for (int rr = r + smer; rr >= 0 && rr < 8; rr += smer) {
                 for (int dc = -1; dc <= 1; ++dc) {
@@ -496,7 +488,6 @@ double Sachovnice::hodnoceniPesaku(double faze) const
             }
             if (pred) skore += znamenko * 0.08;
 
-            // Passed pawn: no enemy pawns on same/adjacent files ahead.
             bool volny = true;
             for (int rr = r + smer; rr >= 0 && rr < 8; rr += smer) {
                 for (int dc = -1; dc <= 1; ++dc) {
@@ -517,7 +508,6 @@ double Sachovnice::hodnoceniPesaku(double faze) const
                 skore += znamenko * bonus;
             }
 
-            // Isolated pawn penalty.
             bool sousedniSoubor = false;
             for (int dc = -1; dc <= 1; dc += 2) {
                 int nx = c + dc;
@@ -536,8 +526,7 @@ double Sachovnice::hodnoceniPesaku(double faze) const
 
 double Sachovnice::hodnoceniKralu(double faze) const
 {
-    // Middlegame PST prefers castled flanks; endgame PST prefers the centre.
-    // These match Kral::hodnotaFigurky middlegame tables so we can apply a delta.
+
     static const double midB[8][8] = {
         {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
         {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
@@ -579,7 +568,6 @@ double Sachovnice::hodnoceniKralu(double faze) const
         }
     }
 
-    // When kings duel in the endgame, the more central king is better.
     if (wb[0] >= 0 && cb[0] >= 0 && endgame > 0.45) {
         double wCent = -(std::abs(wb[0] - 3.5) + std::abs(wb[1] - 3.5));
         double cCent = -(std::abs(cb[0] - 3.5) + std::abs(cb[1] - 3.5));
@@ -590,7 +578,6 @@ double Sachovnice::hodnoceniKralu(double faze) const
 
 double Sachovnice::hodnoceniMinor(double faze) const
 {
-    // Endgame: bishop slightly better than knight; bishop pair bonus.
     double skore = 0.0;
     const double endgame = 1.0 - faze;
     int bileStrelci = 0, cerneStrelci = 0;
@@ -618,7 +605,7 @@ double Sachovnice::hodnoceniMinor(double faze) const
 
 double Sachovnice::hodnoceniBezpecnostiKrale(double faze) const
 {
-    if (faze < 0.25) return 0.0; // endgame: king activity already handled
+    if (faze < 0.25) return 0.0;
     double skore = 0.0;
     for (int barva = BILAF; barva <= CERNAF; ++barva) {
         int kr = -1, kc = -1;
@@ -633,7 +620,6 @@ double Sachovnice::hodnoceniBezpecnostiKrale(double faze) const
         const int znamenko = (barva == BILAF) ? 1 : -1;
         const int smer = (barva == BILAF) ? -1 : 1;
 
-        // Pawn shield on the three files in front of the king.
         int stit = 0;
         for (int dc = -1; dc <= 1; ++dc) {
             int x = kc + dc;
@@ -644,7 +630,6 @@ double Sachovnice::hodnoceniBezpecnostiKrale(double faze) const
         }
         skore += znamenko * (stit - 2) * 0.25 * faze;
 
-        // Open files near the king are dangerous in the middlegame.
         for (int dc = -1; dc <= 1; ++dc) {
             int x = kc + dc;
             if (x < 0 || x > 7) continue;
@@ -656,7 +641,6 @@ double Sachovnice::hodnoceniBezpecnostiKrale(double faze) const
             if (!maPesaka) skore -= znamenko * 0.2 * faze;
         }
 
-        // Enemy heavy pieces near the king.
         int utoky = 0;
         for (int r = 0; r < 8; ++r)
             for (int c = 0; c < 8; ++c) {
@@ -674,9 +658,6 @@ double Sachovnice::hodnoceniBezpecnostiKrale(double faze) const
 
 double Sachovnice::hodnocenizonyDamy() const
 {
-    // Pieces inside a ~4x4 zone around an enemy queen are uncomfortable;
-    // the king pays more.  Quiet moves into that zone are also deprioritised
-    // in generujTahy.
     const double PENALTA = 0.35;
     const double PENALTA_KRAL = 0.7;
     double skore = 0.0;
@@ -701,8 +682,7 @@ double Sachovnice::hodnocenizonyDamy() const
 
 int Sachovnice::statickeHodnoceni()
 {
-    // Values are stored in tenths of a pawn.  Keep the fractional piece-square
-    // terms until the final conversion instead of truncating every piece.
+
     double skore = 0.0;
     for(int r = 0; r < 8; r++)
     {
@@ -734,9 +714,7 @@ bool Sachovnice::doselCas() const
 
 bool Sachovnice::tahZOteviraciKnihy(Tah& tah) const
 {
-    // The book is deliberately small and transparent: it supplies sound,
-    // named opening development, then the normal search takes over.  Squares
-    // are stored as {fromX, fromY, toX, toY}; row 0 is Black's home rank.
+
     struct KnihovniTah { int fromX, fromY, toX, toY; };
     static const KnihovniTah sicilska[] = {
         {4, 6, 4, 4}, {2, 1, 2, 3}, // 1. e4 c5
@@ -815,7 +793,6 @@ bool Sachovnice::tahZOteviraciKnihy(Tah& tah) const
 
 std::vector<Tah> Sachovnice::generujTahy(int barva, bool jenBrani)
 {
-    // Cache enemy queen zones for move-ordering penalties (~4x4 around each queen).
     bool zonaDamy[8][8] = {};
     for (int r = 0; r < 8; ++r)
         for (int c = 0; c < 8; ++c) {
@@ -837,13 +814,11 @@ std::vector<Tah> Sachovnice::generujTahy(int barva, bool jenBrani)
             if (!f->validniTah(r, c, y, x, this) || !f->validniTahSach(r, c, y, x, this)) continue;
             Tah t = {};
             t.fromX = c; t.fromY = r; t.toX = x; t.toY = y;
-            // MVV-LVA: captures first, then promotion candidates.
             t.priorita = pozice[y][x] ? static_cast<int>(pozice[y][x]->hodnota * 100 - f->hodnota) : 0;
             if (!pozice[y][x] && zonaDamy[y][x])
-                t.priorita -= 40; // discourage quiet walks into the enemy queen's zone
+                t.priorita -= 40;
             if (jePromoce) {
-                // Every promotion is a distinct legal move.  Queen is first
-                // for move ordering, but underpromotions remain searchable.
+
                 for (int typ = 1; typ <= 4; ++typ) {
                     Tah p = t;
                     p.promoceTyp = typ;
@@ -873,8 +848,7 @@ int Sachovnice::quiescence(int alpha, int beta, int barva, int ply)
     std::vector<Tah> tahy = generujTahy(barva, !vSachu);
     if (tahy.empty()) {
         if (vSachu) return -99999 + ply;
-        // No capture normally means a quiet position, but distinguish the rare
-        // stalemate leaf from it.
+
         return generujTahy(barva).empty() ? 0 : alpha;
     }
     for (const Tah& t : tahy) {
@@ -906,7 +880,6 @@ int Sachovnice::negaMax(int hloubka, int alpha, int beta, int barva)
 
     std::vector<Tah> tahy = generujTahy(barva);
     if (tahy.empty()) return jeSach(barva) ? -99999 : 0;
-    // The previous best move is normally the strongest ordering hint.
     if (entry.tahHash == hash) {
         std::stable_sort(tahy.begin(), tahy.end(), [&entry](const Tah& a, const Tah& b) {
             bool aTT = a.fromX == entry.fromX && a.fromY == entry.fromY && a.toX == entry.toX && a.toY == entry.toY;
@@ -938,8 +911,7 @@ Tah Sachovnice::najdiTahRobota()
 
     Tah knihovniTah = {};
     if (tahZOteviraciKnihy(knihovniTah)) {
-        // A book position is still verified against the legal move generator;
-        // the book can therefore never bypass check, castling, or pin rules.
+
         for (const Tah& legalniTah : tahy) {
             if (legalniTah.fromX == knihovniTah.fromX && legalniTah.fromY == knihovniTah.fromY &&
                 legalniTah.toX == knihovniTah.toX && legalniTah.toY == knihovniTah.toY) {
@@ -954,8 +926,7 @@ Tah Sachovnice::najdiTahRobota()
         std::vector<Vysledek> vysledky(tahy.size(), Vysledek{-100000, false});
         std::atomic<size_t> dalsi(0);
         const unsigned jadra = std::thread::hardware_concurrency();
-        // One hardware thread belongs to SDL.  Do not create more workers than
-        // there are root moves, since each worker owns a complete board copy.
+
         const unsigned pocetPracovniku = std::min<unsigned>(
             tahy.size(), jadra > 1 ? jadra - 1 : 1);
         std::vector<std::thread> pracovnici;
@@ -1091,7 +1062,6 @@ void Sachovnice::pohni(int fromY, int fromX, int toY, int toX, int promoceTyp) {
         enPassantY = (fromY + toY) / 2;
     }
 
-    // Fifty-move rule: reset on pawn move or capture, otherwise increment.
     if (pesak || aktualniTah.vyhozena)
         polotahyBezBrani = 0;
     else
@@ -1261,8 +1231,7 @@ bool Sachovnice::jeSach(int barvaKrale){
         }
     }
 ven:
-    // This should be unreachable because legal moves cannot capture kings.
-    // Treating a missing king as checked is safer than testing square a8.
+
     if (!kralNalezen) return true;
     int barvaUtocnika = (barvaKrale == BILAF) ? CERNAF : BILAF;
     if(jePolickoOhrozeno(kx,ky,barvaUtocnika)) return true;
@@ -1277,8 +1246,7 @@ bool Sachovnice::jePolickoOhrozeno(int x, int y, int barvaUtocnika){
             {
                 Figurka* f = pozice[r][c];
                 if(f && f->barva == barvaUtocnika ){
-                    // A pawn attacks diagonally even if the queried square is
-                    // empty; validniTah deliberately does not model that.
+
                     if (dynamic_cast<Pesak*>(f)) {
                         int smer = (barvaUtocnika == BILAF) ? -1 : 1;
                         if (y - r == smer && abs(x - c) == 1) return true;

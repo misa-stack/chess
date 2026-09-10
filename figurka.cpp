@@ -22,14 +22,10 @@ bool Figurka::validniTahSach(int fromY, int fromX, int toY, int toX, Sachovnice 
 	aktualniTah.toX = toX;
 	aktualniTah.toY = toY;
 	aktualniTah.vyhozena = s->pozice[toY][toX];
-	// Kings are never captured in chess.  Allowing this move removed the king
-	// from the board and made subsequent check/mate detection inspect a bogus
-	// square.  A threat to the king is represented by check instead.
+
 	if (aktualniTah.vyhozena && aktualniTah.vyhozena->kdoJsi() % 6 == 5)
 		return false;
-	// En passant captures a pawn beside the destination square.  It must be
-	// removed while testing king safety: otherwise a discovered rook/bishop
-	// attack can be missed.
+
 	Figurka* enPassantPawn = NULL;
 	int enPassantY = fromY;
 	if (kdoJsi() % 6 == 0 && toX == s->enPassantX && toY == s->enPassantY &&

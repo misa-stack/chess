@@ -79,8 +79,7 @@ bool Pesak::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice* s)
 	if (abs(dx) == 1 && dy == smer && s->jeNepritel(toY, toX, barva))
 		return true;
 
-	// The target square is empty, but the pawn that advanced two squares is
-	// captured from this pawn's rank.
+
 	if (abs(dx) == 1 && dy == smer && toX == s->enPassantX && toY == s->enPassantY) {
 		Figurka* vedle = s->pozice[fromY][toX];
 		return vedle && vedle->barva != barva && vedle->kdoJsi() % 6 == 0;

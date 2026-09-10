@@ -91,13 +91,10 @@ bool Kral::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice *s)
 	int dx = abs(toX - fromX);
 	int dy = abs(toY - fromY);
 
-	// Only a two-square move from the original king square is castling.
-	// Ordinary horizontal king moves, including taking a checking queen, must
-	// still be legal escape moves while the king is in check.
+
 	if (fromX == 4 && dy == 0 && dx == 2 && tah == 0)
 	{
 		int nepritel = (barva == BILAF) ? CERNAF : BILAF;
-		// A king may not castle out of, through, or into check.
 		if (s->jeSach(barva)) return false;
 		if (toX == 6) {
 			Figurka* vez = s->pozice[toY][7];

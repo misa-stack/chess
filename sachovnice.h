@@ -18,7 +18,7 @@ struct Tah {
     int priorita;
     bool rosada;
     bool promoce;
-    int promoceTyp; // 1 rook, 2 knight, 3 bishop, 4 queen
+    int promoceTyp;
     Figurka* promoce2;
     Figurka* vyhozena;
     bool enPassant;
@@ -37,8 +37,6 @@ struct Hashtable {
 	int fromX, fromY, toX, toY;
 };
 
-// Phase-dependent material (units = tenths of a pawn, same as piece `hodnota`).
-// Middlegame (MG) and endgame (EG) are interpolated by fazeHry().
 struct HodnotyFigurek {
     double pesakMG, pesakEG;
     double kunMG, kunEG;
@@ -59,7 +57,6 @@ public:
     int hodnota;
     bool hraju;
     Sachovnice();
-    // Creates an SDL-free, independent board intended for a search worker.
     Sachovnice(const Sachovnice& zdroj, bool jenHledani);
     ~Sachovnice();
     Figurka* pozice[8][8];
@@ -89,8 +86,7 @@ public:
     bool jePolickoOhrozeno(int x , int y, int barvaUtocnika );
     bool jeSach(int barvaKrale);
     void robot();
-    // Search only: unlike robot(), this does not change the board.  It is safe
-    // to call on a private snapshot from a worker thread.
+
     Tah najdiTahRobota();
     void pohni(int fromY, int fromX, int toY, int toX, int promoceTyp = 4);
     void nastavPromoci(int typ);
@@ -126,12 +122,10 @@ public:
     bool vyprselCas;
     int pravaRosady() const;
     HodnotyFigurek hodnoty; // tunable piece values (MG/EG)
-    // +1 = attack, -1 = defend for the given colour (clamped).
     double postoj(int barva) const;
 
 private:
-    // Search snapshots deliberately contain no SDL images.  SDL stays on the
-    // UI thread while workers get fully independent chess state.
+
     Figurka* kopieFigurky(const Figurka* figurka, bool nactiGrafiku) const;
     double fazeHry() const; // 1 = opening/middlegame, 0 = endgame
     double materialBarvy(int barva, double faze) const;

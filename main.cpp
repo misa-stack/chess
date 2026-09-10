@@ -53,8 +53,7 @@ int main(int argc, char** argv)
 	srand(time(NULL));
 	while(1)
 	{
-		// SDL remains on this (main) thread.  The AI gets an independent,
-		// graphics-free snapshot and can use every other hardware thread.
+
         if (s.barvicka == CERNAF && !aiPremysli && !aiHotovo) {
 			aiPremysli = true;
 			aiVlakno = std::thread([&]() {
@@ -102,8 +101,8 @@ int main(int argc, char** argv)
 			switch(event.type)
 			{
 			case SDL_MOUSEBUTTONDOWN:
-				// The source position must stay unchanged until its snapshot has
-				// finished searching.
+
+                .
 				if (aiPremysli) break;
                 if(1199<event.button.x && event.button.x < 1671 && 450 < event.button.y && event.button.y < 550)
 				{
