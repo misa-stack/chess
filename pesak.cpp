@@ -3,25 +3,26 @@
 #include <SDL/SDL.h>
 #include "grafika.h"
 
-Pesak::Pesak(const int barva): Figurka(barva)
+Pesak::Pesak(const int barva, bool nactiGrafiku): Figurka(barva)
 {
-	if (barva == BILAF)
+	if (nactiGrafiku && barva == BILAF)
 	{
 		figurka.nacti("pesak.png");
 	}
-	else if (barva == CERNAF)
+	else if (nactiGrafiku && barva == CERNAF)
 	{
 		figurka.nacti("pesakcerny.png");
 	}
 	hodnota = 10;
 
 }
-int Pesak::kdoJsi()
+int Pesak::kdoJsi() const
 {
 	if(barva == CERNAF)
 		return 6;
 	if(barva == BILAF)
 		return 0;
+	return 0;
 }
 double Pesak::hodnotaFigurky(int y, int x)
 {
@@ -57,6 +58,7 @@ double Pesak::hodnotaFigurky(int y, int x)
 		return hodnotapesakaB[y][x] + hodnota;
 
 	}
+	return 0.0;
 }
 bool Pesak::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice* s)
 {
@@ -76,6 +78,13 @@ bool Pesak::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice* s)
 
 	if (abs(dx) == 1 && dy == smer && s->jeNepritel(toY, toX, barva))
 		return true;
+
+	// The target square is empty, but the pawn that advanced two squares is
+	// captured from this pawn's rank.
+	if (abs(dx) == 1 && dy == smer && toX == s->enPassantX && toY == s->enPassantY) {
+		Figurka* vedle = s->pozice[fromY][toX];
+		return vedle && vedle->barva != barva && vedle->kdoJsi() % 6 == 0;
+	}
 
 	return false;
 }

@@ -1,24 +1,25 @@
 #include "strelec.h"
 
-Strelec::Strelec(const int barva): Figurka(barva)
+Strelec::Strelec(const int barva, bool nactiGrafiku): Figurka(barva)
 {
-	if (barva == BILAF)
+	if (nactiGrafiku && barva == BILAF)
 	{
 		figurka.nacti("strelecb.png");
 
 	}
-	else if (barva == CERNAF)
+	else if (nactiGrafiku && barva == CERNAF)
 	{
 		figurka.nacti("strelecc.png");
 	}
 	hodnota = 30;
 
 }
-int Strelec::kdoJsi(){
+int Strelec::kdoJsi() const{
 	if(barva == CERNAF)
 		return 9;
 	if(barva == BILAF)
 		return 3;
+	return 0;
 }
 double Strelec::hodnotaFigurky(int y, int x){
 	double hodnotaC[8][8] =
@@ -53,6 +54,7 @@ double Strelec::hodnotaFigurky(int y, int x){
 			return hodnotaB[y][x] + hodnota;
 
 		}
+	return 0.0;
 	}
 
 
@@ -81,4 +83,3 @@ bool Strelec::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice *s)
 	if (s->jeNepritel(toY, toX, barva)) return true;
 	return false;
 }
-

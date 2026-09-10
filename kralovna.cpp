@@ -1,24 +1,25 @@
 
 #include "kralovna.h"
 
-Kralovna::Kralovna(const int barva): Figurka(barva)
+Kralovna::Kralovna(const int barva, bool nactiGrafiku): Figurka(barva)
 {
-	if (barva == BILAF)
+	if (nactiGrafiku && barva == BILAF)
 	{
 		figurka.nacti("kralovnab.png");
 	}
-	else if (barva == CERNAF)
+	else if (nactiGrafiku && barva == CERNAF)
 	{
 		figurka.nacti("kalovnac.png");
 	}
 	hodnota = 90;
 
 }
-int Kralovna::kdoJsi(){
+int Kralovna::kdoJsi() const{
 	if(barva == CERNAF)
 		return 10;
 	if(barva == BILAF)
 		return 4;
+	return 0;
 }
 double Kralovna::hodnotaFigurky(int y, int x){
 

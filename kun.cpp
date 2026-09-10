@@ -1,23 +1,24 @@
 #include "kun.h"
 
-Kun::Kun(const int barva): Figurka(barva)
+Kun::Kun(const int barva, bool nactiGrafiku): Figurka(barva)
 {
-	if (barva == BILAF)
+	if (nactiGrafiku && barva == BILAF)
 	{
 		figurka.nacti("kunb.png");
 	}
-	else if (barva == CERNAF)
+	else if (nactiGrafiku && barva == CERNAF)
 	{
 		figurka.nacti("kunc.png");
 	}
 	hodnota = 30;
 
 }
-int Kun::kdoJsi(){
+int Kun::kdoJsi() const{
 	if(barva == CERNAF)
 		return 8;
 	if(barva == BILAF)
 		return 2;
+	return 0;
 }
 double Kun::hodnotaFigurky(int y, int x){
 	double hodnotakone[8][8] =

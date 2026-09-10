@@ -11,7 +11,7 @@ void Figurka::pohlase(int fromY, int fromX, int toY, int toX, Sachovnice *s)
 tah++;
 }
 double Figurka::hodnotaFigurky(int y, int x){
-
+	return 0.0;
 }
 bool Figurka::validniTahSach(int fromY, int fromX, int toY, int toX, Sachovnice *s)
 {
@@ -22,6 +22,23 @@ bool Figurka::validniTahSach(int fromY, int fromX, int toY, int toX, Sachovnice 
 	aktualniTah.toX = toX;
 	aktualniTah.toY = toY;
 	aktualniTah.vyhozena = s->pozice[toY][toX];
+	// Kings are never captured in chess.  Allowing this move removed the king
+	// from the board and made subsequent check/mate detection inspect a bogus
+	// square.  A threat to the king is represented by check instead.
+	if (aktualniTah.vyhozena && aktualniTah.vyhozena->kdoJsi() % 6 == 5)
+		return false;
+	// En passant captures a pawn beside the destination square.  It must be
+	// removed while testing king safety: otherwise a discovered rook/bishop
+	// attack can be missed.
+	Figurka* enPassantPawn = NULL;
+	int enPassantY = fromY;
+	if (kdoJsi() % 6 == 0 && toX == s->enPassantX && toY == s->enPassantY &&
+		aktualniTah.vyhozena == NULL) {
+		enPassantPawn = s->pozice[enPassantY][toX];
+		if (!enPassantPawn || enPassantPawn->kdoJsi() % 6 != 0 ||
+			enPassantPawn->barva == barva) return false;
+		s->pozice[enPassantY][toX] = NULL;
+	}
 	s->pozice[toY][toX] = s->pozice[fromY][fromX];
 	s->pozice[fromY][fromX] = NULL;
 	if(!s->jeSach(s->barvicka))
@@ -29,12 +46,14 @@ bool Figurka::validniTahSach(int fromY, int fromX, int toY, int toX, Sachovnice 
 	{
 		s->pozice[fromY][fromX] = s->pozice[toY][toX];
 		s->pozice[toY][toX] = aktualniTah.vyhozena;
+		if (enPassantPawn) s->pozice[enPassantY][toX] = enPassantPawn;
 		return true;
 	}
 	else
 	{
 		s->pozice[fromY][fromX] = s->pozice[toY][toX];
 		s->pozice[toY][toX] = aktualniTah.vyhozena;
+		if (enPassantPawn) s->pozice[enPassantY][toX] = enPassantPawn;
 		return false;
 
 	}

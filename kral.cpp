@@ -1,24 +1,26 @@
 
 #include "kral.h"
+#include "Vez.h"
 
-Kral::Kral(const int barva): Figurka(barva)
+Kral::Kral(const int barva, bool nactiGrafiku): Figurka(barva)
 {
-	if (barva == BILAF)
+	if (nactiGrafiku && barva == BILAF)
 	{
 		figurka.nacti("kralb.png");
 	}
-	else if (barva == CERNAF)
+	else if (nactiGrafiku && barva == CERNAF)
 	{
 		figurka.nacti("kralc.png");
 	}
 
 	hodnota = 900;
 }
-int Kral::kdoJsi(){
+int Kral::kdoJsi() const{
 	if(barva == CERNAF)
 		return 11;
 	if(barva == BILAF)
 		return 5;
+	return 0;
 }
 double Kral::hodnotaFigurky(int y, int x)
 {
@@ -54,11 +56,13 @@ double Kral::hodnotaFigurky(int y, int x)
 		return hodnotaB[y][x] + hodnota;
 
 	}
+	return 0.0;
 }
 void Kral::pohlase(int fromY, int fromX,int toY,int toX, Sachovnice *s)
 {
 	int dy = abs(toY - fromY);
-	if (dy == 0 && tah == 0)
+	int dx = abs(toX - fromX);
+	if (fromX == 4 && dy == 0 && dx == 2 && tah == 0)
 	{
 		if (toX == 6) {
 			Figurka* vez = s->pozice[toY][7];
@@ -87,24 +91,32 @@ bool Kral::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice *s)
 	int dx = abs(toX - fromX);
 	int dy = abs(toY - fromY);
 
-	if (dy == 0 && tah == 0)
+	// Only a two-square move from the original king square is castling.
+	// Ordinary horizontal king moves, including taking a checking queen, must
+	// still be legal escape moves while the king is in check.
+	if (fromX == 4 && dy == 0 && dx == 2 && tah == 0)
 	{
+		int nepritel = (barva == BILAF) ? CERNAF : BILAF;
+		// A king may not castle out of, through, or into check.
+		if (s->jeSach(barva)) return false;
 		if (toX == 6) {
 			Figurka* vez = s->pozice[toY][7];
-			if (vez && vez->tah == 0) {
+			if (vez && vez->barva == barva && dynamic_cast<Vez*>(vez) && vez->tah == 0) {
 				if (!s->jeFigurka(toY, 5) && !s->jeFigurka(toY, 6))
 				{
-					return true;
+					return !s->jePolickoOhrozeno(5, toY, nepritel) &&
+					       !s->jePolickoOhrozeno(6, toY, nepritel);
 				}
 			}
 		}
 
 		if (toX == 2) {
 			Figurka* vez = s->pozice[toY][0];
-			if (vez && vez->tah == 0) {
+			if (vez && vez->barva == barva && dynamic_cast<Vez*>(vez) && vez->tah == 0) {
 				if (!s->jeFigurka(toY, 1) && !s->jeFigurka(toY, 2) && !s->jeFigurka(toY, 3))
 				{
-					return true;
+					return !s->jePolickoOhrozeno(3, toY, nepritel) &&
+					       !s->jePolickoOhrozeno(2, toY, nepritel);
 				}
 			}
 		}
@@ -127,5 +139,3 @@ bool Kral::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice *s)
 
 	return false;
 }
-
-

@@ -6,10 +6,10 @@
 class Kralovna: public Figurka
 {
 public:
-	Kralovna(const int barva);
+	Kralovna(const int barva, bool nactiGrafiku = true);
 	bool validniTah(int fromY, int fromX, int toY, int toX, Sachovnice *s);
 	double hodnotaFigurky(int y, int x);
-	int kdoJsi();
+	int kdoJsi() const;
 };
 
 

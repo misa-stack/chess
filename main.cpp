@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <math.h>
 #include <pthread.h>
+#include <thread>
+#include <mutex>
+#include <atomic>
 #include <time.h>
 #include <SDL/SDL.h>
 #include "sachovnice.h"
@@ -30,6 +33,11 @@ int main(int argc, char** argv)
     char hodnota[20];
 
 	Sachovnice s;
+	std::thread aiVlakno;
+	std::mutex aiVysledekMutex;
+	Tah aiVysledek = {};
+	std::atomic<bool> aiPremysli(false);
+	std::atomic<bool> aiHotovo(false);
 	tahujuzpet.pridej(new Tlacitko("tah zpet",[&](){
 	}));
 
@@ -45,6 +53,27 @@ int main(int argc, char** argv)
 	srand(time(NULL));
 	while(1)
 	{
+		// SDL remains on this (main) thread.  The AI gets an independent,
+		// graphics-free snapshot and can use every other hardware thread.
+        if (s.barvicka == CERNAF && !aiPremysli && !aiHotovo) {
+			aiPremysli = true;
+			aiVlakno = std::thread([&]() {
+				Sachovnice hledani(s, true);
+				Tah tah = hledani.najdiTahRobota();
+				std::lock_guard<std::mutex> zamyk(aiVysledekMutex);
+				aiVysledek = tah;
+				aiHotovo = true;
+			});
+		}
+		if (aiHotovo) {
+			if (aiVlakno.joinable()) aiVlakno.join();
+			Tah tah;
+			{ std::lock_guard<std::mutex> zamyk(aiVysledekMutex); tah = aiVysledek; }
+			if (tah.fromX >= 0 && tah.fromX < 8)
+				s.pohni(tah.fromY, tah.fromX, tah.toY, tah.toX, tah.promoceTyp);
+			aiHotovo = false;
+			aiPremysli = false;
+        }
         sprintf(hodnota,"%d",s.hodnota);
 	sprintf(hodnota,"%d",s.hodnota);
 
@@ -60,10 +89,6 @@ int main(int argc, char** argv)
 
 		//s.prank();
 
-		if(s.barvicka == CERNAF)
-		{
-		s.robot();
-		}
 		m.kresli(1200,150,1670,250);
 		f.kresli(1200,300,1670,400);
 		tahujuzpet.kresli(1200,450,1670,550);
@@ -77,6 +102,9 @@ int main(int argc, char** argv)
 			switch(event.type)
 			{
 			case SDL_MOUSEBUTTONDOWN:
+				// The source position must stay unchanged until its snapshot has
+				// finished searching.
+				if (aiPremysli) break;
                 if(1199<event.button.x && event.button.x < 1671 && 450 < event.button.y && event.button.y < 550)
 				{
                     s.tahniZpetuser();
@@ -96,7 +124,20 @@ int main(int argc, char** argv)
 			case SDL_KEYDOWN:
 				switch(event.key.keysym.sym)
 				{
+				case SDLK_r:
+					s.nastavPromoci(1); // rook
+					break;
+				case SDLK_n:
+					s.nastavPromoci(2); // knight
+					break;
+				case SDLK_b:
+					s.nastavPromoci(3); // bishop
+					break;
+				case SDLK_q:
+					s.nastavPromoci(4); // queen (default)
+					break;
 				case SDLK_ESCAPE:
+					if (aiVlakno.joinable()) aiVlakno.join();
 					SDL_Quit();
 					return 0;
 				}

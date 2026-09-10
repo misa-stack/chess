@@ -3,14 +3,14 @@
 #include "pesak.h"
 #include "grafika.h"
 #include <list>
-Vez::Vez(const int barva): Figurka (barva)
+Vez::Vez(const int barva, bool nactiGrafiku): Figurka (barva)
 {
-	if (barva == BILAF)
+	if (nactiGrafiku && barva == BILAF)
 	{
 		figurka.nacti("vezb.png");
 
 	}
-	else if (barva == CERNAF)
+	else if (nactiGrafiku && barva == CERNAF)
 	{
 		figurka.nacti("vezc.png");
 	}
@@ -20,12 +20,13 @@ Vez::Vez(const int barva): Figurka (barva)
 
 
 }
-int Vez::kdoJsi()
+int Vez::kdoJsi() const
 {
 	if(barva == CERNAF)
 		return 7;
 	if(barva == BILAF)
 		return 1;
+	return 0;
 }
 double Vez::hodnotaFigurky(int y, int x){
 	double hodnotaC[8][8] =
@@ -61,6 +62,7 @@ double Vez::hodnotaFigurky(int y, int x){
 			return hodnotaB[y][x] + hodnota;
 
 		}
+	return 0.0;
 	}
 
 bool Vez::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice* s)
@@ -87,4 +89,3 @@ bool Vez::validniTah(int fromY, int fromX, int toY, int toX, Sachovnice* s)
 
 	return false;
 }
-

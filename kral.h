@@ -6,11 +6,11 @@
 class Kral: public Figurka
 {
 public:
-	Kral(const int barva);
+	Kral(const int barva, bool nactiGrafiku = true);
 	bool validniTah(int fromY, int fromX, int toY, int toX, Sachovnice *s);
 	void pohlase(int fromY, int fromX,int toY,int toX, Sachovnice *s);
 	double hodnotaFigurky(int y, int x);
-	int kdoJsi();
+	int kdoJsi() const;
 };
 
 #endif // KRAL_H
